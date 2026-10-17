@@ -1,11 +1,9 @@
-name: Generate Snake Animation
+name: Generate Profile Metrics
 
 on:
   schedule:
-    - cron: "0 */12 * * *"   # every 12 hours
-  workflow_dispatch:          # manual run button
-  push:
-    branches: [main]
+    - cron: "0 0 * * *"      # daily at midnight UTC
+  workflow_dispatch:          # manual "Run workflow" button
 
 permissions:
   contents: write
@@ -13,18 +11,31 @@ permissions:
 jobs:
   generate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
-      - uses: Platane/snk/svg-only@v3
-        with:
-          github_user_name: ${{ github.repository_owner }}
-          outputs: |
-            dist/github-contribution-grid-snake.svg
-            dist/github-contribution-grid-snake-dark.svg?palette=github-dark
+      - uses: actions/checkout@v4
 
-      - uses: crazy-max/ghaction-github-pages@v3.1.0
-        with:
-          target_branch: output
-          build_dir: dist
+      # 1) Stats cards -> profile-summary-card-output/<theme>/*.svg
+      - name: Generate profile summary cards
+        uses: vn7n24fzkq/github-profile-summary-cards@release/v4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          USERNAME: ${{ github.repository_owner }}
+
+      # 2) 3D contribution graph -> profile-3d-contrib/*.svg
+      - name: Generate 3D contribution graph
+        uses: yoshi389111/github-profile-3d-contrib@0.7.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          USERNAME: ${{ github.repository_owner }}
+
+      # 3) Commit the generated images back to the repo
+      - name: Commit generated files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore: update profile metrics" || echo "Nothing to commit"
+          git pull --rebase
+          git push
