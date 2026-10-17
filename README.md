@@ -13,7 +13,6 @@
 <a href="https://github.com/AdiTheDataAnalyst?tab=followers"><img src="https://img.shields.io/github/followers/AdiTheDataAnalyst?label=Followers&style=for-the-badge&logo=github&color=6D5DFB" alt="GitHub followers"/></a>
 <a href="https://github.com/AdiTheDataAnalyst?tab=repositories"><img src="https://img.shields.io/badge/Explore-My%20Repositories-142B4A?style=for-the-badge&logo=github&logoColor=white" alt="Explore repositories"/></a>
 <img src="https://komarev.com/ghpvc/?username=AdiTheDataAnalyst&style=for-the-badge&color=0EA5E9&label=PROFILE+VIEWS" alt="Profile views"/>
-
 </div>
 
 ---
